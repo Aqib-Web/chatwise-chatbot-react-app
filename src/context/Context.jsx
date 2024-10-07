@@ -11,6 +11,7 @@ const ContextProvider = ({ children }) => {
   const [resultData, setResultData] = useState("");
 
   const newChat = () => {
+    setInput("");
     setLoading(false);
     setShowResult(false);
   };

@@ -50,7 +50,7 @@ function ChatBox() {
           ) : (
             <>
               <div
-                className="resultData flex w-fit  max-w-[90%] md:max-w-[75%] flex-col gap-2 rounded-lg  px-3 py-2 md:p-6 text-sm  text-slate-900"
+                className="resultData flex w-fit  max-w-[90%] md:max-w-[80%] flex-col gap-2 rounded-lg  px-3 py-2 md:p-6 text-sm  text-slate-900"
                 dangerouslySetInnerHTML={{
                   __html: formatStrongOnly(marked(resultData)),
                 }}

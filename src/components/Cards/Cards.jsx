@@ -1,7 +1,12 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Compass, Lightbulb, List, Map } from "lucide-react";
 
+import { useContext, useEffect, useState } from "react";
+import { Context } from "@/context/Context";
+
 export default function Cards() {
+  const { setInput, onSent, input } = useContext(Context);
+  const [isCardClicked, setIsCardClicked] = useState(false);
   const cards = [
     {
       title: "Help me get organized with a list of 10 tips",
@@ -21,6 +26,13 @@ export default function Cards() {
     },
   ];
 
+  useEffect(() => {
+    if (isCardClicked) {
+      onSent(input); // Only trigger onSent when a card is clicked
+      setIsCardClicked(false); // Reset the flag after triggering
+    }
+  }, [input, isCardClicked, onSent]);
+
   return (
     <div className="flex-1 lg:mx-16 xl:mx-48 pt-6 pb-16">
       <h1 className="text-5xl pb-2 font-medium">Hello there!</h1>
@@ -31,7 +43,11 @@ export default function Cards() {
         {cards.map((card, index) => (
           <Card
             key={index}
-            className="flex flex-col justify-between bg-muted/40 "
+            className="flex flex-col justify-between bg-muted hover:bg-muted/40 cursor-pointer"
+            onClick={() => {
+              setInput(card.title); // Set the input value
+              setIsCardClicked(true); // Set the flag for the click event
+            }}
           >
             <CardContent className="pt-6 xl:pb-6">
               <p className="text-md font-medium">{card.title}</p>

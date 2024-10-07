@@ -1,0 +1,42 @@
+.resultData > h1,
+.resultData > h2,
+.resultData > h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  line-height: 2rem;
+}
+
+.resultData > strong {
+  /* font-weight: bold; */
+}
+
+.resultData > ul,
+.resultData > ul {
+  margin-left: 2rem;
+}
+
+/* .resultData > ul > li {
+  list-style: disc;
+}
+.resultData > ol > li {
+  list-style: ;
+} */
+
+.resultData > ul,
+.resultData > ol {
+  display: block;
+  list-style: disc outside none;
+  margin: 1em 0;
+  padding: 0 0 0 2rem;
+}
+.resultData > ol {
+  list-style-type: decimal;
+}
+
+/* .resultData > p > strong {
+  font-size: 1.5rem;
+} */
+.strong-only {
+  font-size: 1.3rem;
+  line-height: 1.3em;
+}

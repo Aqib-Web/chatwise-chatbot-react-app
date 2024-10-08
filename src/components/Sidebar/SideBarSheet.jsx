@@ -72,9 +72,9 @@ function SideBarSheet() {
                 }`}
               >
                 <MessageSquare className="h-4 w-4" />
-                {chat[0]?.message.slice(0, 26)}{" "}
+                {chat[0]?.message.slice(0, 18)}{" "}
                 {/* Displaying the first message */}
-                {chat[0]?.message.length > 26 && "..."}
+                {chat[0]?.message.length > 18 && "..."}
               </span>
             );
           })}

@@ -21,39 +21,35 @@ const model = genAI.getGenerativeModel({
 });
 
 const generationConfig = {
-  temperature: 1,
-  topP: 0.95,
-  topK: 64,
-  maxOutputTokens: 8192,
+  temperature: 0.8, // Experiment with values between 0.7 and 1 for more creativity
+  topP: 0.9, // A value of 0.9 to allow a wide range of choices
+  topK: 100, // Consider a larger number of tokens for sampling
+  maxOutputTokens: 200, // Increase to allow for longer responses (adjust as needed)
   responseMimeType: "text/plain",
 };
 
-// async function runGemini(prompt) {
-//   const chatSession = model.startChat({
-//     generationConfig,
-//     // safetySettings: Adjust safety settings
-//     // See https://ai.google.dev/gemini-api/docs/safety-settings
-//     history: [],
-//   });
-
-//   const result = await chatSession.sendMessage(prompt);
-//   console.log(result.response.text());
-//   return result.response.text();
-// }
-
-
-async function runGemini(history) {
-  const chatSession = model.startChat({
-    history: history.map((entry) => ({
-      role: entry.role,
-      parts: [{ text: entry.message }],
-    })),
-  });
-
-  const result = await chatSession.sendMessage(history[history.length - 1].message);
-  console.log(result.response.text());
-  
-  return result.response.text();
+function fileToGenerativePart(base64Image, mimeType) {
+  return {
+    inlineData: {
+      data: base64Image.split(",")[1], // Extract base64 data without prefix
+      mimeType,
+    },
+  };
 }
 
-export default runGemini;
+export default async function runGemini(
+  chatHistory,
+  image = null,
+  mimeType = null
+) {
+  let inputs = chatHistory.map((chat) => chat.message);
+
+  // If there's an image, add it to the prompt
+  if (image && mimeType) {
+    const imagePart = fileToGenerativePart(image, mimeType);
+    inputs.push(imagePart);
+  }
+
+  const result = await model.generateContent(inputs, generationConfig);
+  return result.response.text();
+}

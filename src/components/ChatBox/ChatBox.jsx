@@ -40,8 +40,16 @@ function ChatBox() {
               {chat.role === "user" && (
                 <>
                   <User className="h-8 w-8 p-1.5  rounded-full text-slate-700 bg-muted ml-auto mb-6" />
-                  <div className="flex w-fit max-w-[80%] md:max-w-[75%]  flex-col gap-2 rounded-full px-3 py-2 text-sm ml-auto bg-primary text-primary-foreground ">
+                  <div className="flex w-fit max-w-[80%] md:max-w-[75%]  flex-col gap-2 rounded-lg px-3 py-2 text-sm ml-auto bg-muted text-slate-700 ">
                     {chat.message}
+
+                    {chat.image && (
+                      <img
+                        src={chat.image}
+                        alt="uploaded"
+                        className="max-w-xs mt-2 rounded-lg h-[200px]"
+                      />
+                    )}
                   </div>
                 </>
               )}

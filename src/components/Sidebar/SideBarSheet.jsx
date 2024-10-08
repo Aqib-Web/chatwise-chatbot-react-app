@@ -1,6 +1,8 @@
 import { Menu, BotMessageSquare, Plus, MessageSquare } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { useContext, useState } from "react";
+import { Context } from "@/context/Context";
 
 import {
   Sheet,
@@ -12,8 +14,12 @@ import {
 } from "@/components/ui/sheet";
 
 function SideBarSheet() {
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const { saveChatSession, newChat, allChats, setChatHistory, chatHistory } =
+    useContext(Context);
+
   return (
-    <Sheet>
+    <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" className="shrink-0 md:hidden">
           <Menu className="h-5 w-5" />
@@ -40,6 +46,10 @@ function SideBarSheet() {
                 variant="secondary"
                 size="lg"
                 className=" text-normal m-3 mb-4 tracking-wider rounded-full text-left text-muted-foreground"
+                onClick={() => {
+                  newChat();
+                  setSheetOpen(false);
+                }}
               >
                 <Plus className="h-5 w-5 mr-3" />
                 &nbsp;New Chat
@@ -49,48 +59,25 @@ function SideBarSheet() {
         </SheetHeader>
 
         <nav className="grid gap-2 text-sm font-medium">
-          {/* <a href="#" className="flex items-center gap-2  font-semibold ">
-          <BotMessageSquare className="h-6 w-6 " />
-          <span className="text- tracking-wide">ChatWise</span>
-        </a> */}
-          <a
-            href="#"
-            className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-          >
-            <MessageSquare className="h-5 w-5" />
-            Dashboard
-          </a>
-          <a
-            href="#"
-            className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
-          >
-            <MessageSquare className="h-5 w-5" />
-            Orders
-            {/* <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-            6
-          </Badge> */}
-          </a>
-          <a
-            href="#"
-            className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-          >
-            <MessageSquare className="h-5 w-5" />
-            Products
-          </a>
-          <a
-            href="#"
-            className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-          >
-            <MessageSquare className="h-5 w-5" />
-            Customers
-          </a>
-          <a
-            href="#"
-            className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-          >
-            <MessageSquare className="h-5 w-5" />
-            Analytics
-          </a>
+          {allChats.map((chat, index) => {
+            return (
+              <span
+                key={index}
+                onClick={() => {
+                  setChatHistory(chat);
+                  setSheetOpen(false);
+                }} // Setting the active chat history
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary cursor-pointer hover:bg-muted ${
+                  chat === chatHistory ? "active" : ""
+                }`}
+              >
+                <MessageSquare className="h-4 w-4" />
+                {chat[0]?.message.slice(0, 26)}{" "}
+                {/* Displaying the first message */}
+                {chat[0]?.message.length > 26 && "..."}
+              </span>
+            );
+          })}
         </nav>
         <div className="mt-auto text-center">
           <span className="text-muted-foreground fold-medium text-sm">

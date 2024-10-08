@@ -1,6 +1,6 @@
 import { MessageSquare, Plus } from "lucide-react";
 import { Button } from "../ui/button";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { Context } from "@/context/Context";
 
 export default function Sidebar() {

@@ -1,57 +1,64 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import runGemini from "../config/gemini";
 export const Context = createContext();
 
 const ContextProvider = ({ children }) => {
   const [input, setInput] = useState("");
-  const [recentPrompt, setRecentPrompt] = useState("");
-  const [prevPrompts, setPrevPrompts] = useState([]);
   const [showResult, setShowResult] = useState(false);
   const [loading, setLoading] = useState(false);
   const [resultData, setResultData] = useState("");
+  const [chatHistory, setChatHistory] = useState([]); // Current active chat
+  const [allChats, setAllChats] = useState([]); // Stores all chat sessions
 
   const newChat = () => {
     setInput("");
     setLoading(false);
     setShowResult(false);
+    saveChatSession();
+    setChatHistory([]); //<------ * added this
   };
 
-  const delayPara = (index, nextWord) => {
-    setTimeout(() => {
-      setResultData((prev) => prev + nextWord);
-    }, 35 * index);
+  const saveChatSession = () => {
+    if (chatHistory.length > 0) {
+      setAllChats([...allChats, chatHistory]);
+      // setChatHistory([]); <------ * removed this
+    }
   };
 
   const onSent = async (prompt) => {
-    setResultData("");
     setLoading(true);
-    setShowResult(true);
-    setRecentPrompt(input);
-    setPrevPrompts((prev) => [...prev, input]);
-    const response = await runGemini(prompt);
+    setResultData("");
 
-    let newResponseArray = response.split(" ");
-    for (let i = 0; i < newResponseArray.length; i++) {
-      const nextWord = newResponseArray[i];
-      delayPara(i, nextWord + " ");
-    }
+    const updatedHistory = [...chatHistory, { role: "user", message: prompt }];
+    setChatHistory(updatedHistory);
 
+    const response = await runGemini(updatedHistory);
+
+    const newHistory = [
+      ...updatedHistory,
+      { role: "model", message: response },
+    ];
+    setChatHistory(newHistory);
+
+    saveChatSession(); //<------ * added this
     setLoading(false);
     setInput("");
+    console.log(allChats);
   };
 
   const contextValue = {
-    prevPrompts,
-    setPrevPrompts,
     onSent,
-    setRecentPrompt,
-    recentPrompt,
+    chatHistory, // Current chat session being viewed
+    setChatHistory, // Function to set the active chat history
+    allChats, // All past chat sessions
+    setAllChats, // Function to save chat sessions
     showResult,
     loading,
     resultData,
     input,
     setInput,
     newChat,
+    saveChatSession,
   };
 
   return <Context.Provider value={contextValue}>{children}</Context.Provider>;

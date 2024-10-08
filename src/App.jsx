@@ -8,7 +8,7 @@ import { Context } from "@/context/Context";
 import ChatBox from "./components/ChatBox/ChatBox";
 
 function App() {
-  const { showResult } = useContext(Context);
+  const { chatHistory } = useContext(Context);
   return (
     <>
       <div className="grid min-h-screen w-full md:grid-cols-[270px_1fr] lg:grid-cols-[330px_1fr]">
@@ -18,7 +18,7 @@ function App() {
           <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
             <div className="flex flex-1 items-center justify-center rounded-lg bordershadow-sm ">
               <div className="relative flex h-full w-full min-h-[50vh] flex-col rounded-xl p-4 lg:col-span-2">
-                {!showResult ? <Cards /> : <ChatBox />}
+                {chatHistory.length > 0 ? <ChatBox /> : <Cards />}
                 {/* <ChatBox />
                 <Cards /> */}
                 <SearchBar />

@@ -4,7 +4,8 @@ import { useContext } from "react";
 import { Context } from "@/context/Context";
 
 export default function Sidebar() {
-  const { prevPrompts, newChat } = useContext(Context);
+  const { saveChatSession, newChat, allChats, setChatHistory, chatHistory } =
+    useContext(Context);
 
   return (
     <div className="hidden bg-muted/40 md:block">
@@ -32,38 +33,24 @@ export default function Sidebar() {
           </div>
 
           <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-            {prevPrompts.map((item, index) => {
+            {allChats.map((chat, index) => {
               return (
                 <span
                   key={index}
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary cursor-pointer hover:bg-muted "
+                  onClick={() => setChatHistory(chat)} // Setting the active chat history
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary cursor-pointer hover:bg-muted ${
+                    chat === chatHistory ? "active" : ""
+                  }`}
                 >
                   <MessageSquare className="h-4 w-4" />
-                  {item.slice(0, 26)}
-                  {item.length > 26 && "..."}
+                  {chat[0]?.message.slice(0, 26)}{" "}
+                  {/* Displaying the first message */}
+                  {chat[0]?.message.length > 26 && "..."}
                 </span>
               );
             })}
-            {/* <a
-              href="#"
-              className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary"
-            >
-              <MessageSquare className="h-4 w-4" />
-              Products{" "}
-            </a> */}
           </nav>
         </div>
-        {/* <div className="mt-auto p-8">
-            <Button variant="ghost">Logout</Button>
-            <Button
-              variant="ghost"
-              size="lg"
-              className=" rounded-lg text-md tracking-wider w-full text-left "
-            >
-              <Plus />
-              &nbsp;Log out
-            </Button>
-          </div> */}
       </div>
     </div>
   );

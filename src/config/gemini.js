@@ -28,16 +28,31 @@ const generationConfig = {
   responseMimeType: "text/plain",
 };
 
-async function runGemini(prompt) {
+// async function runGemini(prompt) {
+//   const chatSession = model.startChat({
+//     generationConfig,
+//     // safetySettings: Adjust safety settings
+//     // See https://ai.google.dev/gemini-api/docs/safety-settings
+//     history: [],
+//   });
+
+//   const result = await chatSession.sendMessage(prompt);
+//   console.log(result.response.text());
+//   return result.response.text();
+// }
+
+
+async function runGemini(history) {
   const chatSession = model.startChat({
-    generationConfig,
-    // safetySettings: Adjust safety settings
-    // See https://ai.google.dev/gemini-api/docs/safety-settings
-    history: [],
+    history: history.map((entry) => ({
+      role: entry.role,
+      parts: [{ text: entry.message }],
+    })),
   });
 
-  const result = await chatSession.sendMessage(prompt);
+  const result = await chatSession.sendMessage(history[history.length - 1].message);
   console.log(result.response.text());
+  
   return result.response.text();
 }
 

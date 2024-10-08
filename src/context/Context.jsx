@@ -1,64 +1,58 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 import runGemini from "../config/gemini";
 export const Context = createContext();
 
 const ContextProvider = ({ children }) => {
   const [input, setInput] = useState("");
-  const [showResult, setShowResult] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [resultData, setResultData] = useState("");
-  const [chatHistory, setChatHistory] = useState([]); // Current active chat
-  const [allChats, setAllChats] = useState([]); // Stores all chat sessions
+  const [chatHistory, setChatHistory] = useState([]); // Holds current chat session
+  const [allChats, setAllChats] = useState([]); // Holds all previous chat sessions
 
-  const newChat = () => {
-    setInput("");
-    setLoading(false);
-    setShowResult(false);
-    saveChatSession();
-    setChatHistory([]); //<------ * added this
-  };
-
+  // Save the current chat session and reset for a new chat
   const saveChatSession = () => {
     if (chatHistory.length > 0) {
-      setAllChats([...allChats, chatHistory]);
-      // setChatHistory([]); <------ * removed this
+      setAllChats((prevChats) => [...prevChats, chatHistory]); // Save the current session
+      setChatHistory([]); // Clear current chat history for a new session
     }
+  };
+
+  const newChat = () => {
+    saveChatSession(); // Save the last session before starting a new one
+    setInput("");
+    setLoading(false);
   };
 
   const onSent = async (prompt) => {
     setLoading(true);
-    setResultData("");
 
+    // Update chat history with the user's input
     const updatedHistory = [...chatHistory, { role: "user", message: prompt }];
     setChatHistory(updatedHistory);
 
+    // Send message to Gemini
     const response = await runGemini(updatedHistory);
 
+    // Update chat history with the model's response
     const newHistory = [
       ...updatedHistory,
       { role: "model", message: response },
     ];
     setChatHistory(newHistory);
 
-    saveChatSession(); //<------ * added this
     setLoading(false);
-    setInput("");
-    console.log(allChats);
+    setInput(""); // Reset input field
   };
 
   const contextValue = {
     onSent,
-    chatHistory, // Current chat session being viewed
-    setChatHistory, // Function to set the active chat history
-    allChats, // All past chat sessions
-    setAllChats, // Function to save chat sessions
-    showResult,
+    chatHistory,
+    allChats,
+    setAllChats,
     loading,
-    resultData,
     input,
     setInput,
     newChat,
-    saveChatSession,
+    setChatHistory,
   };
 
   return <Context.Provider value={contextValue}>{children}</Context.Provider>;

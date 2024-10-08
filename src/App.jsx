@@ -3,12 +3,13 @@ import Cards from "./components/Cards/Cards";
 import Header from "./components/Header/Header";
 import SearchBar from "./components/SearchBar/SearchBar";
 import Sidebar from "./components/Sidebar/Sidebar";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Context } from "@/context/Context";
 import ChatBox from "./components/ChatBox/ChatBox";
 
 function App() {
   const { chatHistory } = useContext(Context);
+
   return (
     <>
       <div className="grid min-h-screen w-full md:grid-cols-[270px_1fr] lg:grid-cols-[330px_1fr]">

@@ -11,7 +11,7 @@ Welcome to the **ChatWise** built with React, ShadCN UI, Vite, and the Google Ge
 
 ## Demo
 
-[**Live Demo**](https://chatwise-chatbot-react-app-phi.vercel.app/)
+[**Live Demo**](https://chatwise-chatbot-react-app-phi.vercel.app)
 
 ## Tech Stack
 
